@@ -1,0 +1,17 @@
+
+#confirm drops only if items is renamed
+confirm_only_renamed: false
+#use [] to confirm all drops, use upper case for all items
+whitelisted_items: []
+
+seconds_before_reset: 5
+
+per_item_confirmation: false
+
+blacklisted_worlds: []
+
+messages:
+  prefix: "&7[&c&lConfirmation&7] "
+  #use {0} to use seconds before cancel
+  cancel_message: "You must confirm the drop do the same thing before {0} seconds !"
+  no_permission: "You haven't the permission!"
