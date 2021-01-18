@@ -39,8 +39,6 @@ public class PlayerDropItem implements Listener {
 			return;
 		boolean perItemConfirmation = config.getBoolean("per_item_confirmation");
 		boolean resetConfirmAfterDrop = config.getBoolean("reset_confirm_after_drop");
-		System.out.println(resetConfirmAfterDrop);
-
 		HashMap<ItemStack, Long> items = wait.get(p.getUniqueId().toString());
 		Long currentMillis = System.currentTimeMillis();
 		if (!perItemConfirmation)
