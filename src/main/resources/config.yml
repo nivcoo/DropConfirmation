@@ -8,6 +8,8 @@ seconds_before_reset: 5
 
 per_item_confirmation: false
 
+reset_confirm_after_drop: true
+
 blacklisted_worlds: []
 
 messages:

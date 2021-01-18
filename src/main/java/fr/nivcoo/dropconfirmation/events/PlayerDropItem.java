@@ -33,12 +33,12 @@ public class PlayerDropItem implements Listener {
 		boolean confirmOnlyName = config.getBoolean("confirm_only_renamed");
 		List<String> whitelistedItems = config.getStringList("whitelisted_items");
 		List<String> blacklistedWorlds = config.getStringList("blacklisted_world");
-		boolean perItemConfirmation = config.getBoolean("per_item_confirmation");
-
 		if (blacklistedWorlds.contains(p.getWorld().getName())
 				|| (!whitelistedItems.isEmpty() && !whitelistedItems.contains(item.getType().toString()))
 				|| (confirmOnlyName && !item.getItemMeta().hasDisplayName()))
 			return;
+		boolean perItemConfirmation = config.getBoolean("per_item_confirmation");
+		boolean resetConfirmAfterDrop = config.getBoolean("reset_confirm_after_drop");
 
 		HashMap<ItemStack, Long> items = wait.get(p.getUniqueId().toString());
 		Long currentMillis = System.currentTimeMillis();
@@ -56,7 +56,7 @@ public class PlayerDropItem implements Listener {
 					items.put(item, currentMillis);
 					sendCancelMessage(p);
 					e.setCancelled(true);
-				} else {
+				} else if(resetConfirmAfterDrop) {
 					items.remove(item);
 				}
 			}
