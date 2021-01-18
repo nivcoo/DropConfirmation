@@ -39,6 +39,7 @@ public class PlayerDropItem implements Listener {
 			return;
 		boolean perItemConfirmation = config.getBoolean("per_item_confirmation");
 		boolean resetConfirmAfterDrop = config.getBoolean("reset_confirm_after_drop");
+		System.out.println(resetConfirmAfterDrop);
 
 		HashMap<ItemStack, Long> items = wait.get(p.getUniqueId().toString());
 		Long currentMillis = System.currentTimeMillis();
@@ -53,12 +54,12 @@ public class PlayerDropItem implements Listener {
 
 			} else {
 				if ((currentMillis - millis) / 1000 > secondsBeforeReset) {
-					items.put(item, currentMillis);
 					sendCancelMessage(p);
 					e.setCancelled(true);
-				} else if(resetConfirmAfterDrop) {
+				} else if (resetConfirmAfterDrop) {
 					items.remove(item);
-				}
+				} 
+				items.put(item, currentMillis);
 			}
 
 		} else {
