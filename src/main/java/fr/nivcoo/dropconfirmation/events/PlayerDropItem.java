@@ -15,7 +15,7 @@ import fr.nivcoo.dropconfirmation.DropConfirmation;
 import fr.nivcoo.dropconfirmation.utils.Config;
 
 public class PlayerDropItem implements Listener {
-	
+
 	private HashMap<String, HashMap<ItemStack, Long>> wait = new HashMap<>();
 	private DropConfirmation dp = DropConfirmation.get();
 	private Config config = dp.getConfiguration();
@@ -33,21 +33,26 @@ public class PlayerDropItem implements Listener {
 		boolean confirmOnlyName = config.getBoolean("confirm_only_renamed");
 		List<String> whitelistedItems = config.getStringList("whitelisted_items");
 		List<String> blacklistedWorlds = config.getStringList("blacklisted_world");
-		
-		if (blacklistedWorlds.contains(p.getWorld().getName()) || (!whitelistedItems.isEmpty() && !whitelistedItems.contains(item.getType().toString())) || (confirmOnlyName && !item.getItemMeta().hasDisplayName()))
+		boolean perItemConfirmation = config.getBoolean("per_item_confirmation");
+
+		if (blacklistedWorlds.contains(p.getWorld().getName())
+				|| (!whitelistedItems.isEmpty() && !whitelistedItems.contains(item.getType().toString()))
+				|| (confirmOnlyName && !item.getItemMeta().hasDisplayName()))
 			return;
-		
+
 		HashMap<ItemStack, Long> items = wait.get(p.getUniqueId().toString());
 		Long currentMillis = System.currentTimeMillis();
-		if(items != null) {
+		if (!perItemConfirmation)
+			item = null;
+		if (items != null) {
 			Long millis = items.get(item);
-			if(millis == null) {
+			if (millis == null) {
 				items.put(item, currentMillis);
 				sendCancelMessage(p);
 				e.setCancelled(true);
-				
+
 			} else {
-				if((currentMillis - millis) / 1000 > secondsBeforeReset) {
+				if ((currentMillis - millis) / 1000 > secondsBeforeReset) {
 					items.put(item, currentMillis);
 					sendCancelMessage(p);
 					e.setCancelled(true);
@@ -55,19 +60,21 @@ public class PlayerDropItem implements Listener {
 					items.remove(item);
 				}
 			}
-			
+
 		} else {
 			items = new HashMap<>();
 			items.put(item, currentMillis);
 			sendCancelMessage(p);
 			e.setCancelled(true);
 		}
+
 		wait.put(p.getUniqueId().toString(), items);
 
 	}
-	
+
 	private void sendCancelMessage(Player p) {
-		p.sendMessage(config.getString("messages.prefix") + config.getString("messages.cancel_message").replace("{0}", String.valueOf(secondsBeforeReset)));
+		p.sendMessage(config.getString("messages.prefix")
+				+ config.getString("messages.cancel_message").replace("{0}", String.valueOf(secondsBeforeReset)));
 	}
 
 }
