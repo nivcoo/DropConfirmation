@@ -1,5 +1,6 @@
 package fr.nivcoo.dropconfirmation.events;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import fr.nivcoo.dropconfirmation.DropConfirmation;
@@ -21,12 +24,20 @@ public class PlayerDropItem implements Listener {
 	private Config config = dp.getConfiguration();
 	int secondsBeforeReset = config.getInt("seconds_before_reset");
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent e) {
 
 		Player p = e.getPlayer();
-		if (p.hasPermission("dropconfirmation.bypass"))
+		ArrayList<InventoryType> it = new ArrayList<>();
+		it.add(InventoryType.CRAFTING);
+		it.add(InventoryType.PLAYER);
+		it.add(InventoryType.CREATIVE);
+		InventoryView iv = p.getOpenInventory();
+
+		if (p.hasPermission("dropconfirmation.bypass") || (iv != null && !it.contains(iv.getType())))
 			return;
+		
+		
 
 		Item i = e.getItemDrop();
 		ItemStack item = i.getItemStack();
