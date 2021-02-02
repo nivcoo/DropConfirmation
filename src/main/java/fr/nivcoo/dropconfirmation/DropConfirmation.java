@@ -18,8 +18,8 @@ public class DropConfirmation extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		INSTANCE = this;
-		config = new Config(new File("plugins" + File.separator + "DropConfirmation" + File.separator + "config.yml"));
 		saveDefaultConfig();
+		config = new Config(new File("plugins" + File.separator + "DropConfirmation" + File.separator + "config.yml"));
 		getCommand("dp").setExecutor(new DropConfirmationCommand());
 		Bukkit.getPluginManager().registerEvents(new PlayerDropItem(), this);
 		Bukkit.getConsoleSender().sendMessage("§c==============§b===============");
