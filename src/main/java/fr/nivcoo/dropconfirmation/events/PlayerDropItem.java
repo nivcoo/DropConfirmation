@@ -34,10 +34,10 @@ public class PlayerDropItem implements Listener {
 		it.add(InventoryType.CREATIVE);
 		InventoryView iv = p.getOpenInventory();
 
+		System.out.println(p.getOpenInventory());
+
 		if (p.hasPermission("dropconfirmation.bypass") || (iv != null && !it.contains(iv.getType())))
 			return;
-		
-		
 
 		Item i = e.getItemDrop();
 		ItemStack item = i.getItemStack();
@@ -59,15 +59,15 @@ public class PlayerDropItem implements Listener {
 			if (millis == null) {
 				items.put(item, currentMillis);
 				sendCancelMessage(p);
-				e.setCancelled(true);
+				giveItemCancel(p, i);
 
 			} else {
 				if ((currentMillis - millis) / 1000 > secondsBeforeReset) {
 					sendCancelMessage(p);
-					e.setCancelled(true);
+					giveItemCancel(p, i);
 				} else if (resetConfirmAfterDrop) {
 					items.remove(item);
-				} 
+				}
 				items.put(item, currentMillis);
 			}
 
@@ -80,6 +80,15 @@ public class PlayerDropItem implements Listener {
 
 		wait.put(p.getUniqueId().toString(), items);
 
+	}
+
+	private void giveItemCancel(Player p, Item item) {
+		ItemStack itemClone = item.getItemStack().clone();
+		item.remove();
+		HashMap<Integer, ItemStack> other = p.getInventory().addItem(itemClone);
+
+		for (ItemStack is : other.values())
+			p.getWorld().dropItem(p.getLocation().add(0, 1, 0), is);
 	}
 
 	private void sendCancelMessage(Player p) {
