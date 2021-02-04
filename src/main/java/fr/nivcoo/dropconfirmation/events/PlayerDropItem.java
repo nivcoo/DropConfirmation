@@ -34,8 +34,6 @@ public class PlayerDropItem implements Listener {
 		it.add(InventoryType.CREATIVE);
 		InventoryView iv = p.getOpenInventory();
 
-		System.out.println(p.getOpenInventory());
-
 		if (p.hasPermission("dropconfirmation.bypass") || (iv != null && !it.contains(iv.getType())))
 			return;
 
