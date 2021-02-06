@@ -73,7 +73,6 @@ public class PlayerDropItem implements Listener {
 			items = new HashMap<>();
 			items.put(item, currentMillis);
 			sendCancelMessage(p);
-			e.setCancelled(true);
 		}
 
 		wait.put(p.getUniqueId().toString(), items);
