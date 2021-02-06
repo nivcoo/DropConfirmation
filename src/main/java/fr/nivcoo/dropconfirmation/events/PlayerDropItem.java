@@ -24,7 +24,7 @@ public class PlayerDropItem implements Listener {
 	private Config config = dp.getConfiguration();
 	int secondsBeforeReset = config.getInt("seconds_before_reset");
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerDropItemEvent(PlayerDropItemEvent e) {
 
 		Player p = e.getPlayer();
@@ -57,12 +57,13 @@ public class PlayerDropItem implements Listener {
 			if (millis == null) {
 				items.put(item, currentMillis);
 				sendCancelMessage(p);
-				giveItemCancel(p, i);
+				e.setCancelled(true);
 
 			} else {
 				if ((currentMillis - millis) / 1000 > secondsBeforeReset) {
 					sendCancelMessage(p);
-					giveItemCancel(p, i);
+
+					e.setCancelled(true);
 				} else if (resetConfirmAfterDrop) {
 					items.remove(item);
 				}
@@ -73,19 +74,11 @@ public class PlayerDropItem implements Listener {
 			items = new HashMap<>();
 			items.put(item, currentMillis);
 			sendCancelMessage(p);
+			e.setCancelled(true);
 		}
 
 		wait.put(p.getUniqueId().toString(), items);
 
-	}
-
-	private void giveItemCancel(Player p, Item item) {
-		ItemStack itemClone = item.getItemStack().clone();
-		item.remove();
-		HashMap<Integer, ItemStack> other = p.getInventory().addItem(itemClone);
-
-		for (ItemStack is : other.values())
-			p.getWorld().dropItem(p.getLocation().add(0, 1, 0), is);
 	}
 
 	private void sendCancelMessage(Player p) {
