@@ -1,6 +1,6 @@
 name: DropConfirmation
 main: fr.nivcoo.dropconfirmation.DropConfirmation
-version: 1.1.5
+version: 1.1.6
 authors: [nivcoo]
 commands:
   dp:
