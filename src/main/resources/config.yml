@@ -1,8 +1,7 @@
-
 #confirm drops only if items is renamed
 confirm_only_renamed: false
 #use [] to confirm all drops, use upper case for all items
-whitelisted_items: []
+whitelisted_items: [ ]
 
 seconds_before_reset: 5
 
@@ -10,7 +9,7 @@ per_item_confirmation: false
 
 reset_confirm_after_drop: true
 
-blacklisted_worlds: []
+blacklisted_worlds: [ ]
 
 messages:
   prefix: "&7[&c&lConfirmation&7] "
