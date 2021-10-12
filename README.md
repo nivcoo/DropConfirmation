@@ -16,7 +16,7 @@
 <h3 align="center">DropConfirm</h3>
 
   <p align="center">
-    Global Boosters for Spigot and Paper
+    Prevents Dropping the wrong items.
     <br />
     <a href="https://github.com/TamrielNetwork/DropConfirm"><strong>Explore the docs »</strong></a>
     <br />
@@ -60,20 +60,16 @@
 
 ### Description
 
-DropConfirm is a Booster Plugin created to provide Global Boosters for JobsReborn, McMMO and Minecraft!
+DropConfirm is a plugin that prevents you from dropping the wrong items.
 
-This plugin is perfect for any server wishing to receive donations from their players without becoming pay to win!
+This plugin is perfect for any server wanting their players to be extra safe when handling items!
 
 ### Features
 
-* Global Minecraft Experience Boosters
-* Global McMMO Experience Boosters
-* Global Jobs Experience and Money Boosters
-* MySQL/MariaDB support
-* A Bar that shows active boosters and hides automatically when there are none active
-* Support for scheduled boosters from JobsReborn
-* Placeholders and the ability to create a menu to activate boosters
-  through [DeluxeMenus](https://www.spigotmc.org/resources/deluxemenus.11734/) for example
+* Prevent item dropping
+* Whitelist
+* Renamed Items
+* World Blacklist
 
 ### Built With
 
@@ -88,15 +84,19 @@ To get the plugin running on your server follow these simple steps.
 
 ### Commands and Permissions
 
-1. Permission: `dropconfirm.give`
+1. Permission: `dropconfirm.reload`
 
-* Command: `/drop give <player> <boosterid> <amount>`
-* Description: Give a player a certain amount of boosters
+* Command: `/drop reload`
+* Description: Reload the plugin
 
 2. Permission: `DEFAULT`
 
-* Command: `/drop use <boosterid>`
-* Description: Use a specified booster
+* Command: `/drop`
+* Description: Main command
+
+3. Permission: `dropconfirm.bypass`
+
+* Description: Bypass the drop check
 
 ### Configuration
 
@@ -124,7 +124,7 @@ messages:
 
 ## Roadmap
 
-See the [open issues](https://github.com/TamrielNetwork/GBooster/issues) for a list of proposed features (and known
+See the [open issues](https://github.com/TamrielNetwork/DropConfirm/issues) for a list of proposed features (and known
 issues).
 
 <!-- CONTRIBUTING -->
