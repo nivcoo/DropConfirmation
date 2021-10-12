@@ -1,0 +1,33 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+}
+
+group = 'fr.nivcoo'
+version = '1.2.0'
+
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://papermc.io/repo/repository/maven-public/'
+    }
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy = 'INCLUDE'
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}

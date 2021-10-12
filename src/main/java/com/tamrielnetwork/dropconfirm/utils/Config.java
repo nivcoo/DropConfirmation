@@ -1,4 +1,4 @@
-package fr.nivcoo.dropconfirmation.utils;
+package com.tamrielnetwork.dropconfirm.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Config {
-    private File fichierConfig;
+    private final File fichierConfig;
     private FileConfiguration fconfig;
 
     public Config(File file) {
@@ -25,7 +25,7 @@ public class Config {
         try {
             fconfig.save(fichierConfig);
         } catch (IOException ex) {
-            Bukkit.getLogger().severe("An error has occured while saving file " + fichierConfig.getPath());
+            Bukkit.getLogger().severe("An error occurred while saving the file." + fichierConfig.getPath());
         }
     }
 
@@ -34,8 +34,7 @@ public class Config {
     }
 
     public void set(String path, Object obj) {
-        if (obj instanceof Location) {
-            Location loc = (Location) obj;
+        if (obj instanceof Location loc) {
             fconfig.set(path + ".x", loc.getX());
             fconfig.set(path + ".y", loc.getY());
             fconfig.set(path + ".z", loc.getZ());
@@ -85,22 +84,19 @@ public class Config {
 
     public List<Integer> getIntegerList(String path) {
         List<Integer> name = new ArrayList<>();
-        for (Integer nom : fconfig.getIntegerList(path))
-            name.add(nom);
+        name.addAll(fconfig.getIntegerList(path));
         return name;
     }
 
     public List<String> getKeys(String path) {
         List<String> list = new ArrayList<>();
         if ("".equalsIgnoreCase(path)) {
-            for (String section : fconfig.getKeys(false))
-                list.add(section);
+            list.addAll(fconfig.getKeys(false));
         } else {
             ConfigurationSection cs = fconfig.getConfigurationSection(path);
             if (cs == null)
                 return list;
-            for (String section : cs.getKeys(false))
-                list.add(section);
+            list.addAll(cs.getKeys(false));
         }
         return list;
     }

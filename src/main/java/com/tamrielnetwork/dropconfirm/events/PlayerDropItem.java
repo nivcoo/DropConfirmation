@@ -1,7 +1,7 @@
-package fr.nivcoo.dropconfirmation.events;
+package com.tamrielnetwork.dropconfirm.events;
 
-import fr.nivcoo.dropconfirmation.DropConfirmation;
-import fr.nivcoo.dropconfirmation.utils.Config;
+import com.tamrielnetwork.dropconfirm.DropConfirm;
+import com.tamrielnetwork.dropconfirm.utils.Config;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,10 +18,10 @@ import java.util.List;
 
 public class PlayerDropItem implements Listener {
 
-    private HashMap<String, HashMap<ItemStack, Long>> wait = new HashMap<>();
-    private DropConfirmation dp = DropConfirmation.get();
-    private Config config = dp.getConfiguration();
-    int secondsBeforeReset = config.getInt("seconds_before_reset");
+    private final HashMap<String, HashMap<ItemStack, Long>> wait = new HashMap<>();
+    private final DropConfirm drop = DropConfirm.get();
+    private final Config config = drop.getConfiguration();
+    final int secondsBeforeReset = config.getInt("seconds_before_reset");
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDropItemEvent(PlayerDropItemEvent e) {
@@ -33,7 +33,7 @@ public class PlayerDropItem implements Listener {
         it.add(InventoryType.CREATIVE);
         InventoryView iv = p.getOpenInventory();
 
-        if (p.hasPermission("dropconfirmation.bypass") || (iv != null && !it.contains(iv.getType())))
+        if (p.hasPermission("dropconfirm.bypass") || !it.contains(iv.getType()))
             return;
 
         Item i = e.getItemDrop();
