@@ -1,6 +1,6 @@
 name: DropConfirm
 version: @version@
-main: com.tamrielnetwork.DropConfirm
+main: com.tamrielnetwork.dropconfirm
 api-version: 1.16
 authors: [ nivcoo,TamrielNetwork ]
 website: https://tamriel.site
