@@ -83,8 +83,7 @@ public class Config {
     }
 
     public List<Integer> getIntegerList(String path) {
-        List<Integer> name = new ArrayList<>();
-        name.addAll(fconfig.getIntegerList(path));
+        List<Integer> name = new ArrayList<>(fconfig.getIntegerList(path));
         return name;
     }
 

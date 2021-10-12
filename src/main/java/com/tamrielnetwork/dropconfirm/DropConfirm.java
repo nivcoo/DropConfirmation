@@ -2,6 +2,7 @@ package com.tamrielnetwork.dropconfirm;
 
 import com.tamrielnetwork.dropconfirm.events.PlayerDropItem;
 import com.tamrielnetwork.dropconfirm.utils.Config;
+import com.tamrielnetwork.dropconfirm.commands.DropConfirmCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

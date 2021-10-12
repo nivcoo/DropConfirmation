@@ -1,5 +1,6 @@
-package com.tamrielnetwork.dropconfirm;
+package com.tamrielnetwork.dropconfirm.commands;
 
+import com.tamrielnetwork.dropconfirm.DropConfirm;
 import com.tamrielnetwork.dropconfirm.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,7 +11,11 @@ import org.jetbrains.annotations.NotNull;
 public class DropConfirmCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (args.length == 0) {
+            sender.sendMessage("No arguments specified");
+            return true;
+        }
         if (!"drop".equalsIgnoreCase(command.getLabel()))
             return false;
         DropConfirm drop = DropConfirm.get();
