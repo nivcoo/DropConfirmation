@@ -11,10 +11,10 @@ public class DropConfirmCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, Command command, @NotNull String label, String[] args) {
-        if (!"dp".equalsIgnoreCase(command.getLabel()))
+        if (!"drop".equalsIgnoreCase(command.getLabel()))
             return false;
-        DropConfirm dp = DropConfirm.get();
-        Config config = dp.getConfiguration();
+        DropConfirm drop = DropConfirm.get();
+        Config config = drop.getConfiguration();
         String prefix = config.getString("messages.prefix");
         String unknownCmd = config.getString("messages.no_permission");
         if (sender.hasPermission("dropconfirm.reload")) {
@@ -25,7 +25,7 @@ public class DropConfirmCommand implements CommandExecutor {
                 sender.sendMessage(unknownCmd);
                 return true;
             }
-            dp.reload();
+            drop.reload();
             sender.sendMessage(prefix + ChatColor.GREEN + "DropConfirm Reloaded!");
         }
         return true;
