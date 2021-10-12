@@ -41,8 +41,9 @@ public class Config {
             fconfig.set(path + ".yaw", loc.getYaw());
             fconfig.set(path + ".pitch", loc.getPitch());
             fconfig.set(path + ".world", loc.getWorld().getName());
-        } else
+        } else {
             fconfig.set(path, obj);
+        }
         save();
     }
 
@@ -52,10 +53,11 @@ public class Config {
 
     public String getString(String path, Object... lists) {
         String name = fconfig.getString(path);
-        if (name != null && lists != null)
-            for (int i = 0; i < lists.length; i++)
+        if (name != null && lists != null) {
+            for (int i = 0; i < lists.length; i++) {
                 name = name.replace("{" + i + "}", lists[i].toString());
-
+            }
+        }
         return name == null ? null : name.replace("&", "§");
     }
 
@@ -83,8 +85,7 @@ public class Config {
     }
 
     public List<Integer> getIntegerList(String path) {
-        List<Integer> name = new ArrayList<>(fconfig.getIntegerList(path));
-        return name;
+        return new ArrayList<>(fconfig.getIntegerList(path));
     }
 
     public List<String> getKeys(String path) {
@@ -111,8 +112,9 @@ public class Config {
         float yaw = (float) fconfig.getDouble(path + ".yaw");
         float pitch = (float) fconfig.getDouble(path + ".pitch");
         String world = fconfig.getString(path + ".world");
-        if (world == null || "".equalsIgnoreCase(world))
+        if (world == null || "".equalsIgnoreCase(world)) {
             return null;
+        }
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 

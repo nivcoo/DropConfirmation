@@ -1,8 +1,8 @@
 package com.tamrielnetwork.dropconfirm;
 
-import com.tamrielnetwork.dropconfirm.events.PlayerDropItem;
+import com.tamrielnetwork.dropconfirm.commands.DropConfirmCmd;
+import com.tamrielnetwork.dropconfirm.listeners.PlayerDropItem;
 import com.tamrielnetwork.dropconfirm.utils.Config;
-import com.tamrielnetwork.dropconfirm.commands.DropConfirmCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,9 +22,9 @@ public class DropConfirm extends JavaPlugin {
         INSTANCE = this;
         saveDefaultConfig();
         config = new Config(new File("plugins" + File.separator + "DropConfirm" + File.separator + "config.yml"));
-        Objects.requireNonNull(getCommand("drop")).setExecutor(new DropConfirmCommand());
+        Objects.requireNonNull(getCommand("drop")).setExecutor(new DropConfirmCmd());
         Bukkit.getPluginManager().registerEvents(new PlayerDropItem(), this);
-        Bukkit.getLogger().info("§7DropConfirm §av" + this.getDescription().getVersion() + " enabled");
+        Bukkit.getLogger().info("§7DropConfirm " + this.getDescription().getVersion() + " enabled");
         Bukkit.getLogger().info("Copyright (C) 2021 Leopold Meinel");
         Bukkit.getLogger().info("This program comes with ABSOLUTELY NO WARRANTY!");
         Bukkit.getLogger().info("This is free software, and you are welcome to redistribute it under certain conditions.");

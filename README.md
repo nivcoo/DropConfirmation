@@ -101,7 +101,7 @@ To get the plugin running on your server follow these simple steps.
 ### Configuration
 
 ```
-confirm_only_renamed: true
+confirm_only_renamed: false
 
 whitelisted_items: [ ]
 
@@ -116,7 +116,7 @@ blacklisted_worlds: [ ]
 messages:
   prefix: "&7[&c&lConfirm&7] "
   #use {0} to use seconds before cancel
-  cancel_message: "Confirm the drop before {0}s!"
+  cancel_message: "Confirm within  {0} seconds!"
   no_permission: "&7You don't have enough permissions!"
 ```
 
