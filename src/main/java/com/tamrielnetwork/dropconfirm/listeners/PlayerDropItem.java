@@ -70,8 +70,7 @@ public class PlayerDropItem implements Listener {
                     itemStackMap.put(droppedItemStack, currentMillis);
                     sendCancelMessage(player);
                     playerDropItemEvent.setCancelled(true);
-                }
-                else {
+                } else {
                     // Cancel playerDropItemEvent if item isn't older than seconds_before_reset
                     if ((currentMillis - millis) / 1000 > config.getInt("seconds_before_reset")) {
                         sendCancelMessage(player);
@@ -96,6 +95,7 @@ public class PlayerDropItem implements Listener {
             uuidMap.put(player.getUniqueId().toString(), itemStackMap);
         }
     }
+
     // Define Message on cancelled playerDropItemEvent
     private void sendCancelMessage(Player player) {
         player.sendMessage(config.getString("messages.prefix") + config.getString("messages.cancel_message").replace("{0}", String.valueOf(config.getInt("seconds_before_reset"))));

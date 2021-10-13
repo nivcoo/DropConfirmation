@@ -44,6 +44,7 @@ public class DropConfirm extends JavaPlugin {
         // Log to console
         Bukkit.getLogger().info("§7DropConfirm §av" + this.getDescription().getVersion() + " disabled");
     }
+
     // Define reload() for config
     public void reload() {
         config.loadConfig();

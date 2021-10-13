@@ -17,22 +17,24 @@ public class Config {
     private final File currentConfig;
     // Define modifyConfig
     private FileConfiguration modifyConfig;
+
     // Initialise currentConfig with config.yml and initialise modifyConfig with loaded config.yml
     public Config(File file) {
         this.currentConfig = file;
         loadConfig();
     }
+
     // Save config
     public void save() {
         try {
             // Try to save currentConfig
             modifyConfig.save(currentConfig);
-        }
-        catch (IOException ioException) {
+        } catch (IOException ioException) {
             // ERROR on IOException
             Bukkit.getLogger().severe("An error occurred while saving the file." + currentConfig.getPath());
         }
     }
+
     // Initialise modifyConfig with loaded config.yml
     public void loadConfig() {
         modifyConfig = YamlConfiguration.loadConfiguration(currentConfig);
@@ -55,10 +57,12 @@ public class Config {
         // Save config
         save();
     }
+
     // Get String from config by path
     public String getString(String path) {
         return getString(path, new Object[]{});
     }
+
     // Get String from config by path and Object lists
     public String getString(String path, Object... lists) {
         // Define name as path
@@ -72,22 +76,27 @@ public class Config {
         // Replace Color Codes & with § in name if not null and return name
         return name == null ? null : name.replace("&", "§");
     }
+
     // Get int from config
     public int getInt(String path) {
         return modifyConfig.getInt(path);
     }
+
     // Get long from config
     public long getLong(String path) {
         return modifyConfig.getLong(path);
     }
+
     // Get boolean from config
     public boolean getBoolean(String path) {
         return modifyConfig.getBoolean(path);
     }
+
     // Get double from config
     public double getDouble(String path) {
         return modifyConfig.getDouble(path);
     }
+
     // Get StringList from config
     public List<String> getStringList(String path) {
         // Define text as ArrayList<>()
@@ -98,10 +107,12 @@ public class Config {
         }
         return name;
     }
+
     // Get IntegerList from config
     public List<Integer> getIntegerList(String path) {
         return new ArrayList<>(modifyConfig.getIntegerList(path));
     }
+
     // Get Keys from config
     public List<String> getKeys(String path) {
         List<String> list = new ArrayList<>();
@@ -113,7 +124,7 @@ public class Config {
         else {
             ConfigurationSection configurationSection = modifyConfig.getConfigurationSection(path);
             // If configurationSection is null return list
-            if (configurationSection == null){
+            if (configurationSection == null) {
                 return list;
             }
             // Add Keys from ConfigurationSection from path
@@ -121,10 +132,12 @@ public class Config {
         }
         return list;
     }
+
     // Get ItemStack from config
     public ItemStack getItem(String path) {
         return modifyConfig.getItemStack(path);
     }
+
     // Get location from config
     public Location getLocation(String path) {
         // Get values defined at *@0*
@@ -141,14 +154,17 @@ public class Config {
         // Return new location with values from *@0*
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
+
     // Check if String exists in config
     public boolean exist(String path) {
         return modifyConfig.contains(path);
     }
+
     // Reload config
     public void reload() {
         loadConfig();
     }
+
     // Get currentConfig
     public File getFile() {
         return currentConfig;
