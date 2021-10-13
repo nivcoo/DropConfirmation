@@ -10,7 +10,9 @@ import java.io.File;
 import java.util.Objects;
 
 public class DropConfirm extends JavaPlugin {
+    // Define INSTANCE
     private static DropConfirm INSTANCE;
+    // Define config
     private Config config;
 
     public static DropConfirm get() {
@@ -19,11 +21,17 @@ public class DropConfirm extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Redefine INSTANCE
         INSTANCE = this;
+        // Save default config.yml
         saveDefaultConfig();
+        // Redefine config
         config = new Config(new File("plugins" + File.separator + "DropConfirm" + File.separator + "config.yml"));
+        // Register Commands
         Objects.requireNonNull(getCommand("drop")).setExecutor(new DropConfirmCmd());
+        // Register Listeners
         Bukkit.getPluginManager().registerEvents(new PlayerDropItem(), this);
+        // Log to console
         Bukkit.getLogger().info("§7DropConfirm " + this.getDescription().getVersion() + " enabled");
         Bukkit.getLogger().info("Copyright (C) 2021 Leopold Meinel");
         Bukkit.getLogger().info("This program comes with ABSOLUTELY NO WARRANTY!");
@@ -33,13 +41,15 @@ public class DropConfirm extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Log to console
         Bukkit.getLogger().info("§7DropConfirm §av" + this.getDescription().getVersion() + " disabled");
     }
-
+    // Define reload() for config
     public void reload() {
         config.loadConfig();
     }
 
+    // Define getConfiguration() for config
     public Config getConfiguration() {
         return config;
     }
