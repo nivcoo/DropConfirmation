@@ -73,7 +73,7 @@ This plugin is perfect for any server wanting their players to be extra safe whe
 
 ### Built With
 
-* [Gradle 7](https://docs.gradle.org/7.1.1/release-notes.html)
+* [Gradle 7](https://docs.gradle.org/7.2/release-notes.html)
 * [OpenJDK 16](https://openjdk.java.net/projects/jdk/16/)
 
 <!-- GETTING STARTED -->
