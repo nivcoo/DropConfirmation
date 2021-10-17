@@ -29,8 +29,10 @@ public class DropConfirm extends JavaPlugin {
         config = new Config(new File("plugins" + File.separator + "DropConfirm" + File.separator + "config.yml"));
         // Register Commands
         Objects.requireNonNull(getCommand("drop")).setExecutor(new DropConfirmCmd());
+        Objects.requireNonNull(getCommand("drop")).setTabCompleter(new DropConfirmCmd());
         // Register Listeners
         Bukkit.getPluginManager().registerEvents(new PlayerDropItem(), this);
+
         // Log to console
         Bukkit.getLogger().info("§7DropConfirm " + this.getDescription().getVersion() + " enabled");
         Bukkit.getLogger().info("Copyright (C) 2021 Leopold Meinel");

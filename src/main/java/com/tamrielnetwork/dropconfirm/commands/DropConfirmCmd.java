@@ -4,11 +4,15 @@ import com.tamrielnetwork.dropconfirm.DropConfirm;
 import com.tamrielnetwork.dropconfirm.utils.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class DropConfirmCmd implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DropConfirmCmd implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -21,7 +25,11 @@ public class DropConfirmCmd implements CommandExecutor {
         // Define commands
         switch (args[0]) {
             case "reload" -> executeReload(sender, args);
-            case "info" -> sender.sendMessage("§b/drop reload §7: Reload DropConfirm");
+            case "info" -> {
+                if (sender.hasPermission("dropconfirm.reload")) {
+                    sender.sendMessage("§b/drop reload §7: Reload DropConfirm");
+                }
+            }
             default -> sender.sendMessage("§cInvalid option!");
         }
         // Cancel command
@@ -54,4 +62,15 @@ public class DropConfirmCmd implements CommandExecutor {
         sender.sendMessage(prefix + ChatColor.GREEN + "DropConfirm Reloaded!");
     }
 
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        @Nullable List<String> tabComplete = new ArrayList<>();
+        if (args.length == 1) {
+            if (sender.hasPermission("dropconfirm.reload")) {
+                tabComplete.add("reload");
+                tabComplete.add("info");
+            }
+        }
+        return tabComplete;
+    }
 }

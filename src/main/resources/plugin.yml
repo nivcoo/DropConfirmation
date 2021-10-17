@@ -11,7 +11,7 @@ commands:
 permissions:
   dropconfirm.bypass:
     default: op
-    description: bypass the drop check
+    description: Bypass the drop check
   dropconfirm.reload:
     default: op
-    description: reload the plugin
+    description: Reload the plugin
