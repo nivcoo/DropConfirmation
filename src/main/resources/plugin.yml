@@ -1,15 +1,18 @@
 name: DropConfirmation
 main: fr.nivcoo.dropconfirmation.DropConfirmation
-version: 1.1.6
+version: 1.2.0
 authors: [ nivcoo ]
 api-version: 1.13
 commands:
-  dp:
+  dropconfirmation:
     description: main command
 permissions:
   dropconfirmation.bypass:
     default: op
     description: bypass the drop check
-  dropconfirmation.reload:
+  dropconfirmation.commands:
+    default: op
+    description: show help
+  dropconfirmation.command.reload:
     default: op
     description: reload the plugin

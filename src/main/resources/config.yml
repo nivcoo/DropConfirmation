@@ -15,4 +15,11 @@ messages:
   prefix: "&7[&c&lConfirmation&7] "
   #use {0} to use seconds before cancel
   cancel_message: "You must confirm the drop do the same thing before {0} seconds !"
-  no_permission: "You haven't the permission!"
+  commands:
+    incorrect_usage: "&fCorrect Usage : /{0}"
+    no_permission: "&cNo Permission !"
+    help:
+      - "&7&m------------------&8[&6Help Panel&8]&7&m------------------"
+      - "{!dropconfirmation.command.reload}&6/dropconfirmation reload &eReload the config"
+      - "&6/dropconfirmation info &eDisplay the plugin information"
+      - "&7&m----------------------------------------------"
