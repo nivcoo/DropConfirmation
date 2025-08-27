@@ -2,6 +2,7 @@ package fr.nivcoo.dropconfirmation.events;
 
 import fr.nivcoo.dropconfirmation.DropConfirmation;
 import fr.nivcoo.utilsz.config.Config;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,13 @@ public class PlayerDropItem implements Listener {
     public void onPlayerDropItemEvent(PlayerDropItemEvent e) {
 
         Player p = e.getPlayer();
+
+        if (p.isDead() || p.getHealth() <= 0.0) return;
+
+        if (e.getItemDrop().getThrower() == null) return;
+
+        if (p.getGameMode() == GameMode.SPECTATOR) return;
+
         ArrayList<InventoryType> it = new ArrayList<>();
         it.add(InventoryType.CRAFTING);
         it.add(InventoryType.PLAYER);
