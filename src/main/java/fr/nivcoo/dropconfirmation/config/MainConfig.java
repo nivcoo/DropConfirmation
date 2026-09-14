@@ -7,39 +7,22 @@ import fr.nivcoo.utilsz.core.config.annotations.Comment;
 import fr.nivcoo.utilsz.core.config.annotations.Section;
 import fr.nivcoo.utilsz.core.config.annotations.WithConverter;
 import fr.nivcoo.utilsz.core.config.validation.Validatable;
-import org.bukkit.inventory.ItemStack;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public final class MainConfig implements Validatable {
     @Comment({
-            "Groupes imbriquables : all = ET, any = OU. Chaque nœud contient type, all ou any.",
-            "Types : WHITELISTED, RENAMED, ENCHANTED (y compris les livres), CUSTOM_LORE, ALWAYS.",
-            "WHITELISTED utilise whitelisted_items ; une liste de matériaux vide accepte tous les matériaux.",
-            "Par défaut : matériau listé ET (renommé OU enchanté OU lore personnalisé).",
-            "Exemple : any: [{type: WHITELISTED}, {all: [{type: RENAMED}, {type: ENCHANTED}]}].",
-            "Pour confirmer tous les objets : confirmation_conditions: {type: ALWAYS}."
+            "Chaque groupe combine sa liste materials ET ses conditions. Un seul groupe correspondant suffit.",
+            "materials: [] accepte tous les matériaux pour ce groupe ; confirmation_groups: {} ne protège aucun objet.",
+            "Les conditions permettent d'imbriquer all (ET) et any (OU). Chaque nœud contient type, all ou any.",
+            "Types : RENAMED, ENCHANTED (y compris les livres), CUSTOM_LORE, ALWAYS.",
+            "conditions: {type: ALWAYS} protège tous les objets correspondant aux matériaux du groupe.",
+            "Un nouveau groupe peut être ajouté sous le nom de votre choix, avec ses propres materials et conditions."
     })
-    @WithConverter(ConditionExpressionConverter.class)
-    public ConditionExpression confirmationConditions = new ConditionExpression.All(List.of(
-            new ConditionExpression.Leaf(ConfirmationCondition.WHITELISTED),
-            new ConditionExpression.Any(List.of(
-                    new ConditionExpression.Leaf(ConfirmationCondition.RENAMED),
-                    new ConditionExpression.Leaf(ConfirmationCondition.ENCHANTED),
-                    new ConditionExpression.Leaf(ConfirmationCondition.CUSTOM_LORE)))));
-
-    @Comment("Utiliser [] pour accepter tous les matériaux ; utiliser les noms en majuscules.")
-    public List<String> whitelistedItems = List.of(
-            "DRAGON_EGG", "MOB_SPAWNER", "SPAWNER", "ELYTRA", "BLAZE_ROD", "BOW",
-            "DIAMOND_SWORD", "DIAMOND_HELMET", "DIAMOND_CHESTPLATE", "DIAMOND_LEGGINGS",
-            "DIAMOND_BOOTS", "DIAMOND_PICKAXE", "DIAMOND_AXE", "DIAMOND_HOE", "DIAMOND_SHOVEL",
-            "NETHERITE_SWORD", "NETHERITE_HELMET", "NETHERITE_CHESTPLATE", "NETHERITE_LEGGINGS",
-            "NETHERITE_BOOTS", "NETHERITE_PICKAXE", "NETHERITE_AXE", "NETHERITE_HOE", "NETHERITE_SHOVEL",
-            "CROSSBOW", "MACE", "GOLD_HOE", "GOLDEN_HOE", "FISHING_ROD", "HOPPER", "CHEST",
-            "CAULDRON", "LEATHER_HELMET", "LEATHER_CHESTPLATE", "LEATHER_LEGGINGS", "LEATHER_BOOTS",
-            "STICK", "FURNACE", "CLOCK", "WATCH", "SKULL_ITEM", "PLAYER_HEAD", "WRITABLE_BOOK", "BOOK",
-            "ENCHANTED_BOOK", "TRIPWIRE_HOOK");
+    public Map<String, ConfirmationGroup> confirmationGroups = defaultGroups();
 
     public int secondsBeforeReset = 5;
     public boolean perItemConfirmation = true;
@@ -47,19 +30,71 @@ public final class MainConfig implements Validatable {
     public List<String> blacklistedWorld = List.of("pvp");
     public Messages messages = new Messages();
 
-    public boolean requiresConfirmation(ItemStack item) {
-        ConfirmationContext context = new ConfirmationContext(item, item.getItemMeta(), whitelistedItems);
-        return confirmationConditions.matches(condition -> condition.matches(context));
+    public boolean requiresConfirmation(ConfirmationContext context) {
+        return confirmationGroups.values().stream().anyMatch(group -> group.matches(context));
     }
 
     @Override
     public void validate() {
-        Objects.requireNonNull(confirmationConditions, "confirmation_conditions");
-        Objects.requireNonNull(whitelistedItems, "whitelisted_items");
+        Objects.requireNonNull(confirmationGroups, "confirmation_groups");
+        confirmationGroups.forEach((id, group) -> Objects.requireNonNull(group, "confirmation_groups." + id));
         Objects.requireNonNull(blacklistedWorld, "blacklisted_world");
         Objects.requireNonNull(messages, "messages");
         if (secondsBeforeReset < 1) {
             throw new IllegalArgumentException("seconds_before_reset doit être supérieur ou égal à 1");
+        }
+    }
+
+    private static Map<String, ConfirmationGroup> defaultGroups() {
+        Map<String, ConfirmationGroup> groups = new LinkedHashMap<>();
+        groups.put("custom_items", new ConfirmationGroup(List.of(
+                "DRAGON_EGG", "MOB_SPAWNER", "SPAWNER", "ELYTRA", "BLAZE_ROD", "BOW",
+                "DIAMOND_SWORD", "DIAMOND_HELMET", "DIAMOND_CHESTPLATE", "DIAMOND_LEGGINGS",
+                "DIAMOND_BOOTS", "DIAMOND_PICKAXE", "DIAMOND_AXE", "DIAMOND_HOE", "DIAMOND_SHOVEL",
+                "NETHERITE_SWORD", "NETHERITE_HELMET", "NETHERITE_CHESTPLATE", "NETHERITE_LEGGINGS",
+                "NETHERITE_BOOTS", "NETHERITE_PICKAXE", "NETHERITE_AXE", "NETHERITE_HOE", "NETHERITE_SHOVEL",
+                "CROSSBOW", "MACE", "GOLD_HOE", "GOLDEN_HOE", "FISHING_ROD", "HOPPER", "CHEST",
+                "CAULDRON", "LEATHER_HELMET", "LEATHER_CHESTPLATE", "LEATHER_LEGGINGS", "LEATHER_BOOTS",
+                "STICK", "FURNACE", "CLOCK", "WATCH", "SKULL_ITEM", "PLAYER_HEAD", "WRITABLE_BOOK", "BOOK",
+                "ENCHANTED_BOOK", "TRIPWIRE_HOOK"),
+                new ConditionExpression.Any(List.of(
+                        new ConditionExpression.Leaf(ConfirmationCondition.RENAMED),
+                        new ConditionExpression.Leaf(ConfirmationCondition.ENCHANTED),
+                        new ConditionExpression.Leaf(ConfirmationCondition.CUSTOM_LORE)))));
+        groups.put("containers", new ConfirmationGroup(List.of(
+                "SHULKER_BOX", "WHITE_SHULKER_BOX", "ORANGE_SHULKER_BOX", "MAGENTA_SHULKER_BOX",
+                "LIGHT_BLUE_SHULKER_BOX", "YELLOW_SHULKER_BOX", "LIME_SHULKER_BOX", "PINK_SHULKER_BOX",
+                "GRAY_SHULKER_BOX", "LIGHT_GRAY_SHULKER_BOX", "CYAN_SHULKER_BOX", "PURPLE_SHULKER_BOX",
+                "BLUE_SHULKER_BOX", "BROWN_SHULKER_BOX", "GREEN_SHULKER_BOX", "RED_SHULKER_BOX", "BLACK_SHULKER_BOX",
+                "BUNDLE", "WHITE_BUNDLE", "ORANGE_BUNDLE", "MAGENTA_BUNDLE", "LIGHT_BLUE_BUNDLE", "YELLOW_BUNDLE",
+                "LIME_BUNDLE", "PINK_BUNDLE", "GRAY_BUNDLE", "LIGHT_GRAY_BUNDLE", "CYAN_BUNDLE", "PURPLE_BUNDLE",
+                "BLUE_BUNDLE", "BROWN_BUNDLE", "GREEN_BUNDLE", "RED_BUNDLE", "BLACK_BUNDLE"),
+                new ConditionExpression.Leaf(ConfirmationCondition.ALWAYS)));
+        return groups;
+    }
+
+    public static final class ConfirmationGroup implements Validatable {
+        public List<String> materials = List.of();
+        @WithConverter(ConditionExpressionConverter.class)
+        public ConditionExpression conditions = new ConditionExpression.Leaf(ConfirmationCondition.ALWAYS);
+
+        public ConfirmationGroup() {
+        }
+
+        public ConfirmationGroup(List<String> materials, ConditionExpression conditions) {
+            this.materials = materials;
+            this.conditions = conditions;
+        }
+
+        public boolean matches(ConfirmationContext context) {
+            return (materials.isEmpty() || materials.contains(context.material()))
+                    && conditions.matches(condition -> condition.matches(context));
+        }
+
+        @Override
+        public void validate() {
+            Objects.requireNonNull(materials, "materials");
+            Objects.requireNonNull(conditions, "conditions");
         }
     }
 

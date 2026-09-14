@@ -15,7 +15,7 @@ public final class ConditionExpressionConverter implements Converter<ConditionEx
 
     @Override
     public ConditionExpression read(Object raw, ConditionExpression fallback, Field field) {
-        return raw == null ? fallback : readNode(raw, "confirmation_conditions", 0);
+        return raw == null ? fallback : readNode(raw, "conditions", 0);
     }
 
     private ConditionExpression readNode(Object raw, String path, int depth) {

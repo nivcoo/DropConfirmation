@@ -4,13 +4,6 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public enum ConfirmationCondition {
-    WHITELISTED {
-        @Override
-        public boolean matches(ConfirmationContext context) {
-            return context.whitelistedItems().isEmpty()
-                    || context.whitelistedItems().contains(context.item().getType().name());
-        }
-    },
     RENAMED {
         @Override
         public boolean matches(ConfirmationContext context) {

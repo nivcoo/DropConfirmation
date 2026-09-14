@@ -1,6 +1,7 @@
 package fr.nivcoo.dropconfirmation.listener;
 
 import fr.nivcoo.dropconfirmation.DropConfirmation;
+import fr.nivcoo.dropconfirmation.condition.ConfirmationContext;
 import fr.nivcoo.dropconfirmation.config.MainConfig;
 import fr.nivcoo.utilsz.core.config.ConfigManager;
 import org.bukkit.GameMode;
@@ -33,8 +34,9 @@ public final class PlayerDropListener implements Listener {
 
         MainConfig config = plugin.getConfiguration();
         ItemStack item = event.getItemDrop().getItemStack();
+        ConfirmationContext context = new ConfirmationContext(item.getType().name(), item.getItemMeta());
         if (config.blacklistedWorld.contains(player.getWorld().getName())
-                || !config.requiresConfirmation(item)
+                || !config.requiresConfirmation(context)
                 || !hasPlace(player.getInventory(), item)) return;
 
         if (plugin.getConfirmationManager().shouldCancel(player.getUniqueId(), item, config)) {
