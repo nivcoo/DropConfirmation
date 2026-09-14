@@ -1,8 +1,8 @@
 name: DropConfirmation
 main: fr.nivcoo.dropconfirmation.DropConfirmation
-version: 1.2.1
+version: 1.3.1
 authors: [ nivcoo ]
-api-version: 1.20
+api-version: 26.1.2
 commands:
   dropconfirmation:
     description: main command

@@ -1,60 +1,78 @@
 package fr.nivcoo.dropconfirmation;
 
-import fr.nivcoo.dropconfirmation.commands.InfoCMD;
-import fr.nivcoo.dropconfirmation.commands.ReloadCMD;
-import fr.nivcoo.dropconfirmation.events.PlayerDropItem;
-import fr.nivcoo.utilsz.commands.CommandManager;
-import fr.nivcoo.utilsz.config.Config;
-import org.bukkit.Bukkit;
+import fr.nivcoo.dropconfirmation.command.InfoCommand;
+import fr.nivcoo.dropconfirmation.command.ReloadCommand;
+import fr.nivcoo.dropconfirmation.config.MainConfig;
+import fr.nivcoo.dropconfirmation.listener.PlayerDropListener;
+import fr.nivcoo.dropconfirmation.manager.ConfirmationManager;
+import fr.nivcoo.utilsz.core.commands.CommandManager;
+import fr.nivcoo.utilsz.core.commands.CommandsConfigProvider;
+import fr.nivcoo.utilsz.core.config.ConfigManager;
+import fr.nivcoo.utilsz.platform.bukkit.commands.BukkitCommandRegistrar;
+import net.kyori.adventure.text.Component;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.util.List;
 
-public class DropConfirmation extends JavaPlugin {
-    private static DropConfirmation INSTANCE;
-    private Config config;
-
+public final class DropConfirmation extends JavaPlugin {
+    private static DropConfirmation instance;
+    private ConfigManager configManager;
+    private MainConfig config;
     private CommandManager commandManager;
+    private ConfirmationManager confirmationManager;
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
-        saveDefaultConfig();
-        config = new Config(new File("plugins" + File.separator + "DropConfirmation" + File.separator + "config.yml"));
-        Bukkit.getPluginManager().registerEvents(new PlayerDropItem(), this);
-        Bukkit.getConsoleSender().sendMessage("§c==============§b===============");
-        Bukkit.getConsoleSender().sendMessage("§7DropConfirmation §av" + this.getDescription().getVersion());
-        Bukkit.getConsoleSender().sendMessage("§aPlugin Enabled !");
-        Bukkit.getConsoleSender().sendMessage("§c==============§b===============");
+        instance = this;
+        configManager = new ConfigManager(getDataFolder());
+        config = configManager.load("config.yml", MainConfig.class);
+        confirmationManager = new ConfirmationManager();
+        getServer().getPluginManager().registerEvents(new PlayerDropListener(this), this);
+        commandManager = new CommandManager(new BukkitCommandRegistrar(this), new CommandsConfigProvider() {
+            @Override
+            public Component noPermission() {
+                return ConfigManager.parseDynamic(config.messages.commands.noPermission);
+            }
 
-        commandManager = new CommandManager(this, config, "dropconfirmation", "dropconfirmation.commands");
-        commandManager.addCommand(new InfoCMD());
-        commandManager.addCommand(new ReloadCMD());
+            @Override
+            public Component incorrectUsage() {
+                return ConfigManager.parseDynamic(config.messages.commands.incorrectUsage);
+            }
+
+            @Override
+            public List<Component> help() {
+                return config.messages.commands.help.stream().map(ConfigManager::parseDynamic).toList();
+            }
+        }, "dropconfirmation", "dropconfirmation.commands");
+        commandManager.addCommand(new InfoCommand(this));
+        commandManager.addCommand(new ReloadCommand(this));
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getConsoleSender().sendMessage("§c==============§b===============");
-        Bukkit.getConsoleSender().sendMessage("§7DropConfirmation §cv" + this.getDescription().getVersion());
-        Bukkit.getConsoleSender().sendMessage("§cPlugin Disabled !");
-        Bukkit.getConsoleSender().sendMessage("§c==============§b===============");
+        if (confirmationManager != null) confirmationManager.clear();
+        instance = null;
     }
-
 
     public void reload() {
-        config.loadConfig();
+        MainConfig reloaded = configManager.load("config.yml", MainConfig.class);
+        config = reloaded;
+        confirmationManager.clear();
     }
-
 
     public static DropConfirmation get() {
-        return INSTANCE;
+        return instance;
     }
 
-    public Config getConfiguration() {
+    public MainConfig getConfiguration() {
         return config;
     }
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public ConfirmationManager getConfirmationManager() {
+        return confirmationManager;
     }
 }
